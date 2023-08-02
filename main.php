@@ -1,3 +1,15 @@
+<?php
+
+// Aller chercher le endpoint pour les données
+$url = 'http://localhost:3000/api/posts';
+
+// Prendre les données json du enpoint 
+$json_data = file_get_contents($url);
+
+// Créer l'array posts qui est les données json décodé.
+$posts = json_decode($json_data, true);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
