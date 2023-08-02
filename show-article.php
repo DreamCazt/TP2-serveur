@@ -1,9 +1,11 @@
 <?php
 $filename = __DIR__ . '/public/data/articles.json';
 
-$articles = [];
+$posts = [];
 $GET = filter_input_array(INPUT_GET, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $id = $_GET['id'] ?? '';
+
+
 
 // Si l'id n'est pas défénit, rediriger vers l'index.php
 if (!$id) {
