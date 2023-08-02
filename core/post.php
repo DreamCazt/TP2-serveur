@@ -4,7 +4,7 @@ class Post
 {
     //db
     private $conn;
-    private $table = 'articles';
+    private $table = 'posts';
 
     //post properties
     public $id;
@@ -22,9 +22,9 @@ class Post
     public function read()
     {
         //create query
-        $query = 'SELECT articles.*, categories.name as category_name
-                  FROM ' . $this->table . ' articles JOIN 
-                  categories ON articles.category_id = categories.id';
+        $query = 'SELECT posts.*, categories.name as category_name
+                  FROM ' . $this->table . ' posts JOIN 
+                  categories ON posts.category_id = categories.id';
 
         //prepare statement
         $stmt = $this->conn->prepare($query);
