@@ -8,6 +8,30 @@ $json_data = file_get_contents($url);
 
 // Créer l'array posts qui est les données json décodé.
 $posts = json_decode($json_data, true);
+
+$categories = [];
+$postsParCategorie = [];
+
+foreach ($posts as $post) {
+    $cat = $post['category_name'];
+
+    // incrémente le compte de catégorie
+    if (!isset($categories[$cat])) {
+        $categories[$cat] = 1;
+    } else {
+        $categories[$cat]++;
+    }
+
+    // Ajouter les catégories à post
+    if (!isset($postsParCategorie[$cat])) {
+        $postsParCategorie[$cat] = [$post];
+    } else {
+        array_push($postsParCategorie[$cat], $post);
+    }
+}
+
+$selectedCat = $_GET['cat'] ?? false;
+
 ?>
 
 <!DOCTYPE html>
@@ -27,12 +51,12 @@ $posts = json_decode($json_data, true);
                 <div class="categorie-container">
                     <ul>
                         <li class=<?= $selectedCat ? '' : 'cat-active' ?>>
-                            <a href="/">Tous les articles <span class="small">(<?= count($articles) ?>)</span></a>
+                            <a href="main.php">Tous les articles <span class="small">(<?= count($posts) ?>)</span></a>
                         </li>
                         <!-- Libelles des toutes les categories -->
                         <?php foreach ($categories as $catName => $catNum) : ?>
                             <li class=<?= $selectedCat === $catName ? "cat-active" : '' ?>>
-                                <a href="/?cat=<?= $catName ?>"><?= $catName ?><span class="small">
+                                <a href="main.php?cat=<?= $catName ?>"><?= $catName ?><span class="small">
                                         (<?= $catNum ?>)
                                     </span>
                                 </a>
@@ -46,15 +70,15 @@ $posts = json_decode($json_data, true);
                     <?php foreach ($categories as $cat => $num) : ?>
                         <h2><?= $cat ?></h2>
                         <div class="articles-container">
-                            <?php foreach ($articlesParCategorie[$cat] as $a) : ?>
-                                <a href="/show-article.php?id=<?= $a['id'] ?>" class="article block">
+                            <?php foreach ($postsParCategorie[$cat] as $post) : ?>
+                                <a href="/show-article.php?id=<?= $post['id'] ?>" class="article block">
                                     <!-- Image -->
                                     <div class="overflow">
-                                        <img class="img-container" src="<?= $a['image'] ?>">
+                                        <img class="img-container" src="<?= $post['image'] ?>">
                                     </div>
                                     <!-- Titre -->
                                     <h3>
-                                        <?= $a['titre'] ?>
+                                        <?= $post['titre'] ?>
                                     </h3>
                                 </a>
                             <?php endforeach; ?>
@@ -64,15 +88,15 @@ $posts = json_decode($json_data, true);
                     <h2><?= $selectedCat ?></h2>
 
                     <div class="articles-container">
-                        <?php foreach ($articlesParCategorie[$cat] as $a) : ?>
-                            <a href="/show-article.php?id=<?= $a['id'] ?>" class="article block">
+                        <?php foreach ($postsParCategorie[$selectedCat] as $post) : ?>
+                            <a href="/show-article.php?id=<?= $post['id'] ?>" class="article block">
                                 <!-- Image -->
                                 <div class="overflow">
-                                    <img class="img-container" src="<?= $a['image'] ?>">
+                                    <img class="img-container" src="<?= $post['image'] ?>">
                                 </div>
                                 <!-- Titre -->
                                 <h3>
-                                    <?= $a['titre'] ?>
+                                    <?= $post['titre'] ?>
                                 </h3>
                             </a>
                         <?php endforeach; ?>
