@@ -93,4 +93,21 @@ class Post
             return false;
         }
     }
+
+    public function create($titre, $image, $contenu, $categorie_id)
+    {
+        $query = 'INSERT INTO ' . $this->table . '(titre, image, contenu, categorie_id)
+        VALUES (?, ?, ?, ?)';
+
+        // Prepare statement
+        $stmt = $this->conn->prepare($query);
+
+        $result = $stmt->execute([$titre, $image, $contenu, $categorie_id]);
+
+        if ($result) {
+            echo "Post created successfully";
+        } else {
+            echo "Failed to create post";
+        }
+    }
 }
