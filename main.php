@@ -71,16 +71,22 @@ $selectedCat = $_GET['cat'] ?? false;
                         <h2><?= $cat ?></h2>
                         <div class="articles-container">
                             <?php foreach ($postsParCategorie[$cat] as $post) : ?>
-                                <a href="/show-article.php?id=<?= $post['id'] ?>" class="article block">
-                                    <!-- Image -->
-                                    <div class="overflow">
-                                        <img class="img-container" src="<?= $post['image'] ?>">
-                                    </div>
-                                    <!-- Titre -->
-                                    <h3>
-                                        <?= $post['titre'] ?>
-                                    </h3>
-                                </a>
+                                <div class="article block">
+                                    <a href="#" class="delete-logo" style="color: red;" onclick="deletePost(<?= $post['id'] ?>);">
+                                        X
+                                    </a>
+                                    <a href="/show-article.php?id=<?= $post['id'] ?>">
+
+                                        <!-- Image -->
+                                        <div class="overflow">
+                                            <img class="img-container" src="<?= $post['image'] ?>">
+                                        </div>
+                                        <!-- Titre -->
+                                        <h3>
+                                            <?= $post['titre'] ?>
+                                        </h3>
+                                    </a>
+                                </div>
                             <?php endforeach; ?>
                         </div>
                     <?php endforeach; ?>
@@ -106,6 +112,7 @@ $selectedCat = $_GET['cat'] ?? false;
             </div>
         </div>
         <?php require_once 'includes/footer.php' ?>
+        <script src="/public/js/index.js"></script>
 
 </body>
 
