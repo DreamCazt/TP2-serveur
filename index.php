@@ -71,47 +71,73 @@ $app->delete('/api/post/delete/{id}', function (Request $request, Response $resp
 });
 
 
-// Définition d'une route pour mettre à jour un article
-$app->put('/api/post/update/{id}', function (Request $request, Response $response, $args) use ($db) {
-    // Récupération de l'ID de l'article depuis l'URL
-    $id = $args['id'];
+// Définition d'une route pour Créer un post
+$app->post('/api/post/create', function (Request $request, Response $response, $args) use ($db) {
 
-    // Récupération des données mises à jour de l'article depuis le corps de la requête
+    // Récupération des données mises à jour du post depuis le corps de la requête
     $data = $request->getParsedBody();
-    $title = $data['title'] ?? '';
-    $body = $data['body'] ?? '';
+    $titre = $data['titre'] ?? '';
+    $image = $data['image'] ?? '';
+    $contenu = $data['contenu'] ?? '';
+    $categorie = $data['categorie_id'] ?? '';
+
+    // Validation
+    if (!$titre) {
+        $errors['titre'] = 'Saisir le titre svp !';
+    }
+
+    if (!$image) {
+        $errors['image'] = "Entrer l'URL de l'image svp !";
+    } elseif (!filter_var($image, FILTER_VALIDATE_URL)) {
+        $errors['image'] = "Entrer une URL valide de l'image svp ! ";
+    }
+
+    if (!$categorie) {
+        $errors['categorie'] = 'Saisir la catégorie svp !';
+    }
+
+    if (!$contenu) {
+        $errors['contenu'] = 'Saisir le contenu svp !';
+    }
+
 
     // Instantiation du modèle Post en passant la connexion à la base de données
     $post = new Post($db);
 
+    // Récupérer le id du nom de catégorie
+    $categorie_id = $post->getCategoryId($categorie);
+
     // Update the post
-    if ($post->update($id, $title, $body)) {
+    if ($post->create($titre, $image, $contenu, $categorie_id)) {
         // Return a success JSON response
-        $data = ['message' => 'Post updated successfully'];
+        $data = ['message' => 'Post created successfully'];
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     } else {
         // Return an error JSON response
-        $data = ['message' => 'Failed to update post'];
+        $data = ['message' => 'Failed to create post'];
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
     }
 });
 
 $app->patch('/api/post/update_title/{id}', function (Request $request, Response $response, $args) use ($db) {
-    // Get the post ID from the URL
+    // Récupération de l'ID de l'article depuis l'URL
     $id = $args['id'];
 
-    // Get the updated post data from the request body
+    // Récupération des données mises à jour de l'article depuis le corps de la requête
     $data = $request->getParsedBody();
-    $title = $data['title'] ?? '';
+    $titre = $data['titre'] ?? '';
+    $image = $data['image'] ?? '';
+    $contenu = $data['contenu'] ?? '';
+    $categorie = $data['categorie_id'] ?? '';
 
 
     // Instantiate the Post model and pass the database connection
     $post = new Post($db);
 
     // Update the post
-    if ($post->update_title($id, $title)) {
+    if ($post->update_title($id, $titre, $image, $contenu, $categorie)) {
         // Return a success JSON response
         $data = ['message' => 'Post title updated successfully'];
         $response->getBody()->write(json_encode($data));

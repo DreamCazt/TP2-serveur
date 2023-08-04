@@ -13,8 +13,19 @@ class Categorie
         $this->conn = $db;
     }
 
-    public function read()
+    public function getCategories()
     {
-        $query = 'SELECT name FROM categories';
+        $query = 'SELECT * FROM ' . $this->table;
+
+        //prepare statement
+        $stmt = $this->conn->prepare($query);
+
+        //execute query
+        $stmt->execute();
+
+        // Fetch all rows
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $results;
     }
 }
