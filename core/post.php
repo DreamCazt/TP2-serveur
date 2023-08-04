@@ -24,7 +24,7 @@ class Post
         //create query
         $query = 'SELECT posts.*, categories.name as category_name
                   FROM ' . $this->table . ' posts JOIN 
-                  categories ON posts.category_id = categories.id';
+                  categories ON posts.categorie_id = categories.id';
 
         //prepare statement
         $stmt = $this->conn->prepare($query);
@@ -94,7 +94,7 @@ class Post
         }
     }
 
-    public function create($titre, $image, $contenu, $categorie_id)
+    public function create($titre, $image, $contenu, $categorie)
     {
         $query = 'INSERT INTO ' . $this->table . '(titre, image, contenu, categorie_id)
         VALUES (?, ?, ?, ?)';
@@ -102,7 +102,7 @@ class Post
         // Prepare statement
         $stmt = $this->conn->prepare($query);
 
-        $result = $stmt->execute([$titre, $image, $contenu, $categorie_id]);
+        $result = $stmt->execute([$titre, $image, $contenu, $categorie]);
 
         if ($result) {
             echo "Post created successfully";
