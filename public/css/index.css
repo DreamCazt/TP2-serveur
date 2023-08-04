@@ -17,6 +17,7 @@
   height: 30rem;
   width: 100%;
   transition: ease 0.3s;
+  position: relative;
 }
 .article:hover .img-container {
   transform: scale(1.1);
