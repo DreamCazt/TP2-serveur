@@ -104,11 +104,7 @@ class Post
 
         $result = $stmt->execute([$titre, $image, $contenu, $categorie]);
 
-        if ($result) {
-            echo "Post created successfully";
-        } else {
-            echo "Failed to create post";
-        }
+        return $result;
     }
 
     public function getCategoryId($name)
