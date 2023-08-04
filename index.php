@@ -48,6 +48,26 @@ $app->get('/api/posts', function (Request $request, Response $response, array $a
         return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
     }
 });
+$app->get('/api/posts/{id}', function (Request $request, Response $response, $args) use ($db) {
+    $id = $args['id'];
+
+    // Instantiate the Post model with the database connection
+    $post = new Post($db);
+
+    // Get the post
+    $result = $post->get($id);
+
+    // If the post was found, render the view with the post data
+    if ($result) {
+        $response->getBody()->write(json_encode($result));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+    } else {
+        //Aucun articles trouvés
+        $response->getBody()->write(json_encode(['message' => 'No posts found.']));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+    }
+});
+
 // Définition d'une route pour supprimer un article
 $app->delete('/api/post/delete/{id}', function (Request $request, Response $response, $args) use ($db) {
     // Get the post ID from the URL
@@ -116,35 +136,6 @@ $app->post('/api/post/create', function (Request $request, Response $response, $
     } else {
         // Return an error JSON response
         $data = ['message' => 'Failed to create post'];
-        $response->getBody()->write(json_encode($data));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
-    }
-});
-
-$app->patch('/api/post/update_title/{id}', function (Request $request, Response $response, $args) use ($db) {
-    // Récupération de l'ID de l'article depuis l'URL
-    $id = $args['id'];
-
-    // Récupération des données mises à jour de l'article depuis le corps de la requête
-    $data = $request->getParsedBody();
-    $titre = $data['titre'] ?? '';
-    $image = $data['image'] ?? '';
-    $contenu = $data['contenu'] ?? '';
-    $categorie = $data['categorie_id'] ?? '';
-
-
-    // Instantiate the Post model and pass the database connection
-    $post = new Post($db);
-
-    // Update the post
-    if ($post->update_title($id, $titre, $image, $contenu, $categorie)) {
-        // Return a success JSON response
-        $data = ['message' => 'Post title updated successfully'];
-        $response->getBody()->write(json_encode($data));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-    } else {
-        // Return an error JSON response
-        $data = ['message' => 'Failed to update title of the post'];
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
     }
