@@ -110,4 +110,20 @@ class Post
             echo "Failed to create post";
         }
     }
+
+    public function getCategoryId($name)
+    {
+        // Prepare the query
+        $query = 'SELECT id FROM categories WHERE name = ?';
+        $stmt = $this->conn->prepare($query);
+
+        // Execute the query
+        $stmt->execute([$name]);
+
+        // Fetch the category
+        $category = $stmt->fetch();
+
+        // Return the ID
+        return $category['id'];
+    }
 }
