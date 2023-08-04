@@ -1,22 +1,13 @@
 <?php
-$filename = __DIR__ . '/public/data/articles.json';
+$id = $_GET['id'] ?? ''; // GET id from url
 
-$posts = [];
-$GET = filter_input_array(INPUT_GET, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-$id = $_GET['id'] ?? '';
-
+$url = "http://localhost:3000/api/posts/$id";
+$json = file_get_contents($url);
 
 
-// Si l'id n'est pas défénit, rediriger vers l'index.php
-if (!$id) {
-    header('Location: /');
-} else {
-    if (file_exists($filename)) {
-        $articles = json_decode(file_get_contents($filename), true) ?? '';
-        $articlesIndex = array_search($id, array_column($articles, $id));
-        $article = $articles[$articlesIndex];
-    }
-}
+$post = json_decode($json, true);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,11 +25,11 @@ if (!$id) {
         <?php require_once 'includes/header.php' ?>
         <div class="content">
             <div class="article-container">
-                <a href="/" class="article-back">Retour à la liste des articles</a>
-                <img class="article-cover-img" src="<?= $article['image'] ?>">
-                <h1 class="article-title"><?= $article['titre'] ?></h1>
+                <a href="main.php" class="article-back">Retour à la liste des articles</a>
+                <img class="article-cover-img" src="<?= $post['image'] ?>">
+                <h1 class="article-title"><?= $post['titre'] ?></h1>
                 <div class="separator"></div>
-                <p class="article-content"><?= $article['contenu'] ?></p>
+                <p class="article-content"><?= $post['contenu'] ?></p>
             </div>
         </div>
         <?php require_once 'includes/footer.php' ?>
