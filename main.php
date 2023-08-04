@@ -72,7 +72,7 @@ $selectedCat = $_GET['cat'] ?? false;
                         <div class="articles-container">
                             <?php foreach ($postsParCategorie[$cat] as $post) : ?>
                                 <div class="article block">
-                                    <a href="#" class="delete-logo" style="color: red;" onclick="deletePost(<?= $post['id'] ?>);">
+                                    <a href="main.php" class="delete-logo" style="color: red; margin-left:5px" onclick="deletePost(<?= $post['id'] ?>);">
                                         X
                                     </a>
                                     <a href="/show-article.php?id=<?= $post['id'] ?>">
