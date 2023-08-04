@@ -74,32 +74,31 @@ class Post
         }
     }
 
-    public function update_title($id, $title)
+    // Aller chercher le id du post
+    public function get($id)
     {
-        // Create query
-        $query = 'UPDATE ' . $this->table . ' SET title = :title WHERE id = :id';
+        $query = 'SELECT * FROM ' . $this->table . ' WHERE id = :id';
 
-        // Prepare statement
         $stmt = $this->conn->prepare($query);
 
-        // Bind parameters
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':title', $title);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-        // Execute query
         if ($stmt->execute()) {
-            return true;
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $result;
         } else {
             return false;
         }
     }
+
 
     public function create($titre, $image, $contenu, $categorie)
     {
         $query = 'INSERT INTO ' . $this->table . '(titre, image, contenu, categorie_id)
         VALUES (?, ?, ?, ?)';
 
-        // Prepare statement
         $stmt = $this->conn->prepare($query);
 
         $result = $stmt->execute([$titre, $image, $contenu, $categorie]);
