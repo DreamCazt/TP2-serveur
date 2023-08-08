@@ -25,10 +25,10 @@ $app = AppFactory::create(null, $container);
 $app->addRoutingMiddleware();
 $app->add(MethodOverrideMiddleware::class);
 
-//Définition d'une route pour récupérer les articles
+// Endpoint pour récupérer les articles
 $app->get('/api/posts', function (Request $request, Response $response, array $args) use ($db) {
 
-    //Instantiate the Post model and pass the database connection
+    //Instantiate Post et passer la connection à la base de données
     $post = new Post($db);
 
     //Récupérer des articles depuis la base de données
@@ -48,16 +48,17 @@ $app->get('/api/posts', function (Request $request, Response $response, array $a
         return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
     }
 });
+// Endpoint pour récupérer les information d'un seul article
 $app->get('/api/posts/{id}', function (Request $request, Response $response, $args) use ($db) {
     $id = $args['id'];
 
-    // Instantiate the Post model with the database connection
+    // Instantiate Post avec bd
     $post = new Post($db);
 
-    // Get the post
+    // Get post id
     $result = $post->get($id);
 
-    // If the post was found, render the view with the post data
+    //Retour des articles en tant que réponse json
     if ($result) {
         $response->getBody()->write(json_encode($result));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
@@ -68,7 +69,7 @@ $app->get('/api/posts/{id}', function (Request $request, Response $response, $ar
     }
 });
 
-// Définition d'une route pour supprimer un article
+// Endpoint pour supprimer un article
 $app->delete('/api/post/delete/{id}', function (Request $request, Response $response, $args) use ($db) {
     // Get the post ID from the URL
     $id = $args['id'];
@@ -120,26 +121,25 @@ $app->post('/api/post/create', function (Request $request, Response $response, $
         $errors['contenu'] = 'Saisir le contenu svp !';
     }
 
-
     // Instantiation du modèle Post en passant la connexion à la base de données
     $post = new Post($db);
 
     // Récupérer le id du nom de catégorie
     $categorie_id = $post->getCategoryId($categorie);
 
-    // Update the post
+    // Créer article(post)
     if ($post->create($titre, $image, $contenu, $categorie_id)) {
-        // Return a success JSON response
+        // retourne succès réponse JSON 
         $data = ['message' => 'Post created successfully'];
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     } else {
-        // Return an error JSON response
+        // retourne erreur réponse JSON 
         $data = ['message' => 'Failed to create post'];
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
     }
 });
 
-//Run Slim app
+// Lancée l'application
 $app->run();
