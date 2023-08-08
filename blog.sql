@@ -31,5 +31,3 @@ VALUES
 (5, 'Camping d''hiver : une aventure à essayer', 'https://www.mountaineers.org/blog/snow-camping-101-an-ode-to-the-cold/@@images/image', 2, 'Vivez l''excitation du camping en hiver et embrassez l''aventure...'),
 (6, 'Profitez du confort urbain dans nos hôtels de ville', 'https://www.fodors.com/wp-content/uploads/2022/10/Aramness_120.jpeg', 3, 'Découvrez le confort et la commodité avec nos hôtels situés au cœur des centres-villes animés...'),
 (7, 'Le temps de s''exiler en nature', 'https://s3.amazonaws.com/imagescloud/images/medias/camping/canot-camping.jpg', 2, 'Ne manquez pas');
-
-SELECT * FROM categories;
