@@ -53,18 +53,21 @@ class Post
     }
 
 
-    public function update($id, $title, $body)
+    public function update($id, $titre, $image, $contenu, $categorie)
     {
         // Create query
-        $query = 'UPDATE ' . $this->table . ' SET title = :title, body = :body WHERE id = :id';
+        $query = 'UPDATE ' . $this->table .
+            ' SET titre = :titre, image = :image, contenu = :contenu, categorie_id = :categorie_id WHERE id = :id';
 
         // Prepare statement
         $stmt = $this->conn->prepare($query);
 
         // Bind parameters
         $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':title', $title);
-        $stmt->bindParam(':body', $body);
+        $stmt->bindParam(':titre', $titre);
+        $stmt->bindParam(':image', $image);
+        $stmt->bindParam(':contenu', $contenu);
+        $stmt->bindParam(':categorie_id', $categorie);
 
         // Execute query
         if ($stmt->execute()) {
