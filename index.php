@@ -141,5 +141,30 @@ $app->post('/api/post/create', function (Request $request, Response $response, $
     }
 });
 
+$app->put('/api/post/update/{id}', function (Request $request, Response $response, $args) use ($db) {
+    // Get the post ID from the URL
+    $id = $args['id'];
+
+    $data = $request->getParsedBody();
+    $titre = $data['titre'] ?? '';
+    $image = $data['image'] ?? '';
+    $contenu = $data['contenu'] ?? '';
+    $categorie = $data['categorie_id'] ?? '';
+
+    $post = new Post($db);
+
+    if ($post->update($id, $titre, $image, $contenu, $categorie)) {
+        // retourne succès réponse JSON 
+        $data = ['message' => 'Update created successfully'];
+        $response->getBody()->write(json_encode($data));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+    } else {
+        // retourne erreur réponse JSON 
+        $data = ['message' => 'Failed to update post'];
+        $response->getBody()->write(json_encode($data));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+    }
+});
+
 // Lancée l'application
 $app->run();
